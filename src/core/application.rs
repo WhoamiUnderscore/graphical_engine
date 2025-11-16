@@ -1,17 +1,14 @@
 use winit::{
     application::ApplicationHandler,
-    event::{WindowEvent, ElementState, MouseButton},
+    event::{WindowEvent, MouseButton},
     event_loop::ActiveEventLoop,
     dpi::LogicalSize,
     window::WindowId,
-    keyboard::{Key, SmolStr}
 };
 
 use crate::core::viewport::Viewport;
 use crate::core::mouse::Mouse;
 use crate::engine::Engine;
-use crate::math::vector::{Vector2, Vector4};
-use crate::math::triangle::Triangle;
 use crate::utils::time::Time;
 
 pub struct App {
@@ -68,6 +65,9 @@ impl ApplicationHandler for App {
                 match button {
                     MouseButton::Left => {
                         self.mouse.left_click(state, &mut self.engine, self.viewport.width, self.viewport.height);
+                    }
+                    MouseButton::Right => {
+                        self.engine.as_mut().unwrap().clean();
                     }
                     _ => {}
                 }

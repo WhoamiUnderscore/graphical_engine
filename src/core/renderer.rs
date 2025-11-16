@@ -1,7 +1,7 @@
 use crate::engine::Engine;
 
 impl Engine {
-    fn clean(&mut self) {
+    pub fn clean(&mut self) {
         let frame = self.pixels.frame_mut();
         for pixel in frame.chunks_exact_mut(4) {
             pixel[0] = 0x00; // R

@@ -31,7 +31,7 @@ impl Mouse {
                 color: None
             };
 
-            let mut binding = engine.as_mut().unwrap();
+            let binding = engine.as_mut().unwrap();
             let frame = binding.pixels.frame_mut();
             triangle.draw(frame, width, height);
         }
