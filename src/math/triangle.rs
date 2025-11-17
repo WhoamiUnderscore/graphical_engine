@@ -11,6 +11,38 @@ impl Triangle {
         self.draw_lines(self.position[0], self.position[1], frame, width, height);
         self.draw_lines(self.position[2], self.position[1], frame, width, height);
         self.draw_lines(self.position[2], self.position[0], frame, width, height);
+
+        let a = self.position[0];
+        let b = self.position[1];
+        let c = self.position[2];
+
+        let min_x = a.x.min(b.x).min(c.x);
+        let min_y = a.y.min(b.y).min(c.y);
+        let max_x = a.x.max(b.x).max(c.x);
+        let max_y = a.y.max(b.y).max(c.y);
+
+        for y in min_y..max_y {
+            for x in min_x..max_x{
+                let p = Vector2 {
+                    x: x as isize,
+                    y: y as isize
+                };
+
+                let ABP = self.edgeFunction(a, b, p);
+                let BCP = self.edgeFunction(b, c, p);
+                let CAP = self.edgeFunction(c, a, p);
+
+
+                if ABP >= 0 && BCP >= 0 && CAP >= 0 {
+                    let vec = Vector2 { x: x as isize, y: y as isize }; 
+                    self.draw_pixel_from_vec2(vec, frame, width as isize);
+                }
+            }
+        }
+    }
+
+    fn edgeFunction(&self, a: Vector2, b: Vector2, c: Vector2) -> isize {
+        return ((b.x - a.x) * (c.y - a.y)) - ((b.y - a.y) * (c.x - a.x))
     }
 
     fn draw_lines(&self, p1: Vector2, p2: Vector2, frame:  &mut [u8], width: u32, height: u32) {
@@ -30,12 +62,8 @@ impl Triangle {
 
         loop {
             if x0 >= 0 && x0 < width && y0 >= 0 && y0 < height {
-                // Draw pixel
-                let index = (( y0 * width + x0 ) * 4) as usize;
-                frame[index] = 0xff; // R
-                frame[index + 1] = 0x00; // G
-                frame[index + 2] = 0x00; // B
-                frame[index + 3] = 0xff; // A
+                let vec = Vector2 { x: x0, y: y0 };
+                self.draw_pixel_from_vec2(vec, frame, width)
             }
 
             if x0 == x1 && y0 == y1 {
@@ -54,5 +82,14 @@ impl Triangle {
                 y0 += sy;
             }
         }
+    }
+
+    fn draw_pixel_from_vec2(&self, vec: Vector2, frame: &mut [u8], width: isize) {
+        let index = (( vec.y * width + vec.x ) * 4) as usize;
+        // Draw pixel
+        frame[index] = 0xff; // R
+        frame[index + 1] = 0x00; // G
+        frame[index + 2] = 0x00; // B
+        frame[index + 3] = 0xff; // A
     }
 }
