@@ -1,53 +1,28 @@
-use winit::{
-    event::{KeyEvent, ElementState},
-    keyboard::Key
-};
+use std::collections::VecDeque;
+use winit::keyboard::KeyCode;
 
-use crate::engine::Engine;
-use crate::core::application::App;
-use crate::math::{
-    triangle::Triangle,
-    vector::Vector2
-};
-
-impl App {
-    pub fn handle_input(&mut self, event: KeyEvent) {
-        let ( key, pressed ) = {
-            let key = event.logical_key;
-            let pressed = event.state == ElementState::Pressed;
-
-            ( key, pressed )
-        };
-
-        match key {
-            Key::Character(c) if c == "e" =>  {
-                if pressed == false {
-                    return
-                }
-
-                Input::handle_e(&mut self.engine, self.viewport.width, self.viewport.height);
-            }
-            _ => {}
-        }
-    }
+pub enum InputEvent {
+    KeyDown(KeyCode),
+    KeyUp(KeyCode),
+    MouseMove { x: f32, y: f32 }
 }
 
+pub struct InputQueue {
+    events: VecDeque<InputEvent>
+}
 
-struct Input{}
+impl InputQueue {
+    pub fn new() -> Self {
+        InputQueue {
+            events: VecDeque::new()
+        }
+    }
 
-impl Input {
-    pub fn handle_e(engine: &mut Option<Engine>, width: u32, height: u32){
-        let triangle = Triangle {
-            position: [
-                Vector2 { x: 400, y: 100 },
-                Vector2 { x: 700, y: 300 },
-                Vector2 { x: 100,   y: 300 },
-            ],
-            color: None
-        };
+    pub fn push(&mut self, event: InputEvent) {
+        self.events.push_back(event);
+    }
 
-        let binding = engine.as_mut().unwrap();
-        let frame = binding.pixels.frame_mut();
-        triangle.draw(frame, width, height);
+    pub fn pop(&mut self) -> Option<InputEvent> {
+        self.events.pop_front()
     }
 }

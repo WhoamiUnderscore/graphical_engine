@@ -1,13 +1,9 @@
-#[derive(Debug, Copy, Clone)]
-pub struct Vector2 {
-    pub x: isize,
-    pub y: isize
+// World position
+#[derive(Debug, Clone)]
+pub struct Vector3 {
+    pub x: f32,
+    pub y: f32,
+    pub z: f32
 }
 
-#[derive(Debug, Copy, Clone)]
-pub struct Vector4 {
-    pub r: isize,
-    pub g: isize,
-    pub b: isize,
-    pub a: isize,
-}
+
