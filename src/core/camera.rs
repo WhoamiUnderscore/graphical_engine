@@ -1,17 +1,20 @@
-use crate::math::matrix::Matrix3;
-use crate::math::vector::Vector3;
+use crate::math::vector::Vector2;
 
 #[derive(Debug, Clone)]
 pub struct Camera {
-    pub position: Vector3,
-    pub rotation: Matrix3
+    pub position: Vector2,
+    pub fov: f32,
+    pub near: f32,
+    pub far: f32
 }
 
 impl Camera {
     pub fn new() -> Self {
         Camera {
-            position: Vector3 { x: 0.0, y: 0.0, z: 0.0 },
-            rotation: Matrix3::identity()
+            position: Vector2 { x: 0.0, y: 0.0 },
+            fov: 90.0,
+            near: 0.1,
+            far: 100.0
         }
     }
 }

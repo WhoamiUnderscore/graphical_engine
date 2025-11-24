@@ -11,15 +11,16 @@ use crate::core::{
     scene::Scene,
     error::*,
     engine::Engine,
-    input::{InputEvent, InputQueue},
-    view::View
+    input::{InputEvent, Input},
 };
+
+use crate::math::vector::Vector2;
+use crate::math::triangle::Triangle;
 
 pub struct App {
     pub engine: Option<Engine>,
     pub scene: Scene,
-    pub view: View,
-    pub input: InputQueue,
+    pub input: Input,
     pub last_error: Option<GlobalError>
 }
 
@@ -28,8 +29,7 @@ impl App {
         App { 
             engine: None,
             scene: Scene::new(),
-            view: View::new(),
-            input: InputQueue::new(),
+            input: Input::new(),
             last_error: None
         }
 
@@ -44,7 +44,7 @@ impl App {
                 return;
             }
         };
-        engine.render(&self.scene);
+        // engine.render(&mut self.scene);
 
         match engine.viewport.window.as_ref() {
             Some(window) => {
@@ -62,8 +62,18 @@ impl App {
                 InputEvent::KeyUp(kc) => {
                     match kc {
                         KeyCode::KeyE => {
-                            println!("{:?}", self.view);
-                            println!("{:?}", self.view.camera);
+                            println!("Touche e clavier");
+                        }
+                        _ => {}
+                    }
+                }
+                InputEvent::MouseMove { x, y } => {
+                    self.input.mouse.set(x, y);
+                }
+                InputEvent::MouseDown(button) => {
+                    match button {
+                        MouseButton::Left => {
+                            println!("Bouton Gauche de la souris");
                         }
                         _ => {}
                     }
@@ -121,8 +131,14 @@ impl ApplicationHandler for App {
                 }
             }
             WindowEvent::CursorMoved { position, .. } => {
+                self.input.push(InputEvent::MouseMove { x: position.x as f32, y: position.y as f32 });
             }
             WindowEvent::MouseInput { state, button, .. } => {
+                if state == ElementState::Pressed {
+                    self.input.push(InputEvent::MouseDown(button));
+                } else {
+                    self.input.push(InputEvent::MouseUp(button));
+                }
             }
             WindowEvent::RedrawRequested => {
                 self.handle_key_event();

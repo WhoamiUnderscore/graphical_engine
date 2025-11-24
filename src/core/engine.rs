@@ -3,12 +3,14 @@ use pixels::{SurfaceTexture, Pixels};
 
 use crate::core::{
     viewport::Viewport,
+    view::View,
     scene::Scene,
     error::{EngineResult, EngineError}
 };
 
 pub struct Engine {
     pub viewport: Viewport,
+    pub view: View,
     pub pixels: Pixels<'static>,
 }
 
@@ -27,6 +29,7 @@ impl Engine {
 
         Ok(Engine {
             viewport,
+            view: View::new(),
             pixels
         })
     }
@@ -42,15 +45,15 @@ impl Engine {
         }
     }
 
-    fn render_scene(&mut self, scene: &Scene) {
+    fn render_scene(&mut self, scene: &mut Scene) {
         let frame = self.pixels.frame_mut();
 
-        for triangle in scene.triangle_iter() {
-            println!("there is triangle");
+        for triangle in scene.triangles_iter_mut() {
+            triangle.draw(frame, self.viewport.width, self.viewport.height);
         }
     }
 
-    pub fn render(&mut self, scene: &Scene) -> EngineResult<()>{
+    pub fn render(&mut self, scene: &mut Scene) -> EngineResult<()>{
         self.clear();
         self.render_scene(scene);
         match self.pixels.render() {

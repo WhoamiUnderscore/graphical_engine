@@ -13,6 +13,7 @@ use crate::core::error::{ViewportResult, ViewportError};
 pub struct Viewport {
     pub width: u32,
     pub height: u32,
+    pub aspect_ratio: f32,
     pub window: Option<Arc<Window>>
 }
 
@@ -35,6 +36,7 @@ impl Viewport {
         Viewport {
             width,
             height,
+            aspect_ratio: (height / width) as f32,
             window: None
         }
     }

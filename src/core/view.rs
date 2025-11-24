@@ -8,7 +8,7 @@ pub struct View {
 impl View {
     pub fn new() -> Self {
         View {
-            camera: Camera::new()
+            camera: Camera::new(),
         }
     }
 }

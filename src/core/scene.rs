@@ -1,6 +1,6 @@
 use std::collections::{
     VecDeque,
-    vec_deque::Iter
+    vec_deque::{Iter, IterMut}
 };
 
 use crate::math::triangle::Triangle;
@@ -24,8 +24,11 @@ impl Scene {
         self.triangles.pop_front()
     }
 
-    pub fn triangle_iter(&self) -> Iter<Triangle> {
+    pub fn triangles_iter(&self) -> Iter<Triangle> {
         self.triangles.iter()
     }
 
+    pub fn triangles_iter_mut(&mut self) -> IterMut<Triangle> {
+        self.triangles.iter_mut()
+    }
 }
